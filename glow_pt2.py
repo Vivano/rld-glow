@@ -28,7 +28,7 @@ class Flow(nn.Module):
 
 
 
-class glow_block(nn.Module):
+class FlowBlock(nn.Module):
 
     def __init__(self, n_flow, n_channels, hidden_channels):
         super().__init__()
@@ -63,10 +63,10 @@ class GLOW(nn.Module):
         self.glows = nn.ModuleList()
         for i in range(n_block):
             if i == 0:
-                self.glows.append(glow_block(n_flow, n_channels, hidden_channels))
+                self.glows.append(FlowBlock(n_flow, n_channels, hidden_channels))
             else:
                 n_channels *= 2
-                self.glows.append(glow_block(n_flow, n_channels, hidden_channels))
+                self.glows.append(FlowBlock(n_flow, n_channels, hidden_channels))
             # print(n_channels)
 
     def decoder(self, z):

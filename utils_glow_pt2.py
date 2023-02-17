@@ -66,12 +66,12 @@ class ActNorm(nn.Module):
     def encoder(self, x):
         if not self.initialized:
             self.initialize_parameters(x)
-        return (x - self.t) * torch.exp(-self.s), -torch.sum(torch.exp(self.s))
+        return (x - self.t) * torch.exp(-self.s), -torch.sum(torch.log(torch.abs(self.s)))
 
     def decoder(self, z):
         if not self.initialized:
             self.initialize_parameters(z)
-        return self.t + z * torch.exp(self.s), torch.sum(torch.exp(self.s))
+        return self.t + z * torch.exp(self.s), torch.sum(torch.log(torch.abs(self.s)))
 
 
 
@@ -161,7 +161,7 @@ class AffineCoupling(nn.Module):
             t = self.shift_net(z2)
             y[:, :med_c, :, :] = z2
             y[:, med_c:, :, :] = z1 * torch.exp(s) + t
-        log_det = torch.sum(torch.exp(s))
+        log_det = torch.sum(torch.log(torch.abs(s)))
         if self.pad:
             return y[:, :-1, :, :], log_det
         else:
@@ -190,7 +190,7 @@ class AffineCoupling(nn.Module):
             t = self.shift_net(x2)
             y[:, :med_c, :, :] = x2
             y[:, med_c:, :, :] = (x1 - t) / torch.exp(s)
-        log_det_ = -torch.sum(torch.exp(s))
+        log_det_ = -torch.sum(torch.log(torch.abs(s)))
         if self.pad:
             return y[:, :-1, :, :], log_det_
         else:

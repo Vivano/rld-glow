@@ -1,4 +1,4 @@
-from glow import *
+from glow_pt2 import *
 from torchvision import datasets, transforms
 from torch.distributions import Independent, Normal
 
